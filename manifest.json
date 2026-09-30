@@ -1,0 +1,38 @@
+{
+  "id": "tmdb-catalog",
+  "name": "TMDB Catalog",
+  "version": "2.0.0",
+  "description": "Catálogo TMDB. Toda la lógica de API está en index.js del repo. Configura tu API key.",
+  "logo": "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec79ca0f1c1a0f8c2d67c82c562a5c6f0f.svg",
+  "author": "Community",
+  "types": ["catalog"],
+  "type": "catalog",
+  "entry": "index.js",
+  "resources": ["catalog", "meta", "search"],
+  "exports": ["getHome", "discover", "search", "getMeta"],
+  "supportedTypes": ["movie", "tv"],
+  "contentLanguage": ["es", "en"],
+  "extra": {
+    "provider": "js",
+    "supports": {
+      "home": true,
+      "discover": true,
+      "search": true,
+      "contentPage": true
+    }
+  },
+  "configSchema": [
+    {
+      "key": "apiKey",
+      "label": "TMDB API Key",
+      "type": "password",
+      "description": "Clave de themoviedb.org/settings/api"
+    },
+    {
+      "key": "language",
+      "label": "Idioma",
+      "type": "string",
+      "default": "es-MX"
+    }
+  ]
+}

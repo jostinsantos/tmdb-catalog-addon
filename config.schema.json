@@ -1,8 +1,8 @@
 {
   "fields": [
     {
-      "key": "API Key",
-      "label": "a2d9bbed370d9f678e34006f8750a5a5",
+      "key": "apiKey",
+      "label": "TMDB API Key",
       "type": "password",
       "description": "Clave API de themoviedb.org"
     },

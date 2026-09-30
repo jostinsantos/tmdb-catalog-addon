@@ -3,7 +3,7 @@
   "name": "TMDB Catalog",
   "version": "2.1.0",
   "description": "Catálogo TMDB. API key y lógica en index.js del repo (la app no guarda claves).",
-  "logo": "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec79ca0f1c1a0f8c2d67c82c562a5c6f0f.svg",
+  "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgiRhjgL4qcg1_tZRdzHGbIgggX4AYBoC988hAjJZgCQ&s",
   "author": "Community",
   "types": ["catalog"],
   "type": "catalog",

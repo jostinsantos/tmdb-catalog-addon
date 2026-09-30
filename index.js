@@ -1,24 +1,33 @@
 /**
- * Addon catálogo TMDB — toda la lógica de la API vive AQUÍ (repo Git).
- * La app solo ejecuta estas funciones y pinta el JSON devuelto.
+ * Addon catálogo TMDB — TODA la lógica y la API key viven en ESTE repo.
+ * La app solo ejecuta estas funciones; no tiene clave TMDB propia.
  *
- * config: { apiKey, language }
- * IDs: tmdb:movie:ID | tmdb:series:ID
+ * Pon tu clave aquí (o en manifest.extra.apiKey):
  */
-
+var DEFAULT_API_KEY = 'a2d9bbed370d9f678e34006f8750a5a5';
+var DEFAULT_LANGUAGE = 'es-MX';
 var BASE = 'https://api.themoviedb.org/3';
 var IMG = 'https://image.tmdb.org/t/p';
 
 function cfgKey(config) {
-  return (config && (config.apiKey || config.api_key)) || '';
+  if (config) {
+    if (config.apiKey) return String(config.apiKey);
+    if (config.api_key) return String(config.api_key);
+  }
+  return DEFAULT_API_KEY;
 }
 function cfgLang(config) {
-  return (config && config.language) || 'es-MX';
+  if (config && config.language) return String(config.language);
+  return DEFAULT_LANGUAGE;
 }
 
 async function tmdbGet(path, config, query) {
   var key = cfgKey(config);
-  if (!key) throw new Error('Falta apiKey en la configuración del addon');
+  if (!key) {
+    throw new Error(
+      'Falta API key en el addon (edita DEFAULT_API_KEY en index.js o extra.apiKey en manifest.json)'
+    );
+  }
   var q = Object.assign({ api_key: key, language: cfgLang(config) }, query || {});
   var qs = Object.keys(q)
     .map(function (k) {
@@ -116,12 +125,8 @@ async function discover(args, config) {
   if (cat === 'tv' || cat === 'anime' || cat === 'dorama') {
     path = '/discover/tv';
     force = 'tv';
-    if (cat === 'anime') {
-      query.with_origin_country = 'JP';
-    }
-    if (cat === 'dorama') {
-      query.with_origin_country = 'KR';
-    }
+    if (cat === 'anime') query.with_origin_country = 'JP';
+    if (cat === 'dorama') query.with_origin_country = 'KR';
   }
   if (genreId) query.with_genres = String(genreId);
   var data = await tmdbGet(path, config, query);

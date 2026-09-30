@@ -1,16 +1,3 @@
 {
-  "fields": [
-    {
-      "key": "apiKey",
-      "label": "TMDB API Key",
-      "type": "password",
-      "description": "Clave API de themoviedb.org"
-    },
-    {
-      "key": "language",
-      "label": "Idioma",
-      "type": "string",
-      "default": "es-MX"
-    }
-  ]
+  "fields": []
 }

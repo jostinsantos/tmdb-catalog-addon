@@ -1,8 +1,8 @@
 {
   "id": "tmdb-catalog",
   "name": "TMDB Catalog",
-  "version": "2.2.0",
-  "description": "Catálogo TMDB. Configura API key e idioma en Ajustes → Addons → Configurar.",
+  "version": "2.3.0",
+  "description": "Catálogo TMDB con tipos (Películas, Series, Anime, Doramas) y géneros por tipo. API key e idioma en Configurar.",
   "logo": "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3feb79cffa11.svg",
   "author": "Community",
   "types": ["catalog"],
@@ -10,7 +10,7 @@
   "entry": "index.js",
   "resources": ["catalog", "meta", "search"],
   "exports": ["getHome", "discover", "search", "getMeta"],
-  "supportedTypes": ["movie", "tv"],
+  "supportedTypes": ["movie", "tv", "series"],
   "contentLanguage": ["es", "en"],
   "configSchema": [
     {
@@ -41,6 +41,124 @@
       "discover": true,
       "search": true,
       "contentPage": true
+    },
+    "types": [
+      { "id": "movie", "label": "Películas" },
+      { "id": "series", "label": "Series" },
+      { "id": "anime", "label": "Anime" },
+      { "id": "dorama", "label": "Doramas" }
+    ],
+    "genresByType": {
+      "movie": [
+        { "id": 28, "name": "Acción" },
+        { "id": 12, "name": "Aventura" },
+        { "id": 16, "name": "Animación" },
+        { "id": 35, "name": "Comedia" },
+        { "id": 80, "name": "Crimen" },
+        { "id": 99, "name": "Documental" },
+        { "id": 18, "name": "Drama" },
+        { "id": 10751, "name": "Familia" },
+        { "id": 14, "name": "Fantasía" },
+        { "id": 36, "name": "Historia" },
+        { "id": 27, "name": "Terror" },
+        { "id": 10402, "name": "Música" },
+        { "id": 9648, "name": "Misterio" },
+        { "id": 10749, "name": "Romance" },
+        { "id": 878, "name": "Ciencia ficción" },
+        { "id": 53, "name": "Suspense" },
+        { "id": 10752, "name": "Bélica" },
+        { "id": 37, "name": "Western" }
+      ],
+      "series": [
+        { "id": 10759, "name": "Acción y Aventura" },
+        { "id": 16, "name": "Animación" },
+        { "id": 35, "name": "Comedia" },
+        { "id": 80, "name": "Crimen" },
+        { "id": 99, "name": "Documental" },
+        { "id": 18, "name": "Drama" },
+        { "id": 10751, "name": "Familia" },
+        { "id": 10762, "name": "Kids" },
+        { "id": 9648, "name": "Misterio" },
+        { "id": 10765, "name": "Sci-Fi y Fantasía" },
+        { "id": 10766, "name": "Soap" },
+        { "id": 10768, "name": "Guerra y Política" },
+        { "id": 37, "name": "Western" }
+      ],
+      "anime": [
+        { "id": 16, "name": "Animación" },
+        { "id": 10759, "name": "Acción y Aventura" },
+        { "id": 35, "name": "Comedia" },
+        { "id": 18, "name": "Drama" },
+        { "id": 10751, "name": "Familia" },
+        { "id": 10765, "name": "Sci-Fi y Fantasía" },
+        { "id": 9648, "name": "Misterio" },
+        { "id": 10762, "name": "Kids" }
+      ],
+      "dorama": [
+        { "id": 18, "name": "Drama" },
+        { "id": 35, "name": "Comedia" },
+        { "id": 10749, "name": "Romance" },
+        { "id": 9648, "name": "Misterio" },
+        { "id": 80, "name": "Crimen" },
+        { "id": 10766, "name": "Soap" },
+        { "id": 10751, "name": "Familia" }
+      ]
+    },
+    "genres": {
+      "movie": [
+        { "id": 28, "name": "Acción" },
+        { "id": 12, "name": "Aventura" },
+        { "id": 16, "name": "Animación" },
+        { "id": 35, "name": "Comedia" },
+        { "id": 80, "name": "Crimen" },
+        { "id": 99, "name": "Documental" },
+        { "id": 18, "name": "Drama" },
+        { "id": 10751, "name": "Familia" },
+        { "id": 14, "name": "Fantasía" },
+        { "id": 36, "name": "Historia" },
+        { "id": 27, "name": "Terror" },
+        { "id": 10402, "name": "Música" },
+        { "id": 9648, "name": "Misterio" },
+        { "id": 10749, "name": "Romance" },
+        { "id": 878, "name": "Ciencia ficción" },
+        { "id": 53, "name": "Suspense" },
+        { "id": 10752, "name": "Bélica" },
+        { "id": 37, "name": "Western" }
+      ],
+      "series": [
+        { "id": 10759, "name": "Acción y Aventura" },
+        { "id": 16, "name": "Animación" },
+        { "id": 35, "name": "Comedia" },
+        { "id": 80, "name": "Crimen" },
+        { "id": 99, "name": "Documental" },
+        { "id": 18, "name": "Drama" },
+        { "id": 10751, "name": "Familia" },
+        { "id": 10762, "name": "Kids" },
+        { "id": 9648, "name": "Misterio" },
+        { "id": 10765, "name": "Sci-Fi y Fantasía" },
+        { "id": 10766, "name": "Soap" },
+        { "id": 10768, "name": "Guerra y Política" },
+        { "id": 37, "name": "Western" }
+      ],
+      "anime": [
+        { "id": 16, "name": "Animación" },
+        { "id": 10759, "name": "Acción y Aventura" },
+        { "id": 35, "name": "Comedia" },
+        { "id": 18, "name": "Drama" },
+        { "id": 10751, "name": "Familia" },
+        { "id": 10765, "name": "Sci-Fi y Fantasía" },
+        { "id": 9648, "name": "Misterio" },
+        { "id": 10762, "name": "Kids" }
+      ],
+      "dorama": [
+        { "id": 18, "name": "Drama" },
+        { "id": 35, "name": "Comedia" },
+        { "id": 10749, "name": "Romance" },
+        { "id": 9648, "name": "Misterio" },
+        { "id": 80, "name": "Crimen" },
+        { "id": 10766, "name": "Soap" },
+        { "id": 10751, "name": "Familia" }
+      ]
     }
   }
 }

@@ -1,8 +1,6 @@
 /**
- * Addon catálogo TMDB — TODA la lógica y la API key viven en ESTE repo.
- * La app solo ejecuta estas funciones; no tiene clave TMDB propia.
- *
- * Pon tu clave aquí (o en manifest.extra.apiKey):
+ * Addon catálogo TMDB — tipos + géneros por tipo (Películas, Series, Anime, Doramas).
+ * Config: api_key / language desde la app (Ajustes → Addons → Configurar).
  */
 var DEFAULT_API_KEY = 'a2d9bbed370d9f678e34006f8750a5a5';
 var DEFAULT_LANGUAGE = 'es-MX';
@@ -10,7 +8,6 @@ var BASE = 'https://api.themoviedb.org/3';
 var IMG = 'https://image.tmdb.org/t/p';
 
 function cfgKey(config) {
-  // Prioridad: config de la app (Ajustes → Addons) > default del addon
   if (config) {
     if (config.api_key && String(config.api_key).trim()) return String(config.api_key).trim();
     if (config.apiKey && String(config.apiKey).trim()) return String(config.apiKey).trim();
@@ -28,9 +25,7 @@ function cfgLang(config) {
 async function tmdbGet(path, config, query) {
   var key = cfgKey(config);
   if (!key) {
-    throw new Error(
-      'Falta API key en el addon (edita DEFAULT_API_KEY en index.js o extra.apiKey en manifest.json)'
-    );
+    throw new Error('Falta API key TMDB (configura el addon o DEFAULT_API_KEY)');
   }
   var q = Object.assign({ api_key: key, language: cfgLang(config) }, query || {});
   var qs = Object.keys(q)
@@ -48,6 +43,8 @@ function mapItem(r, forceType) {
   var isTv =
     forceType === 'tv' ||
     forceType === 'series' ||
+    forceType === 'anime' ||
+    forceType === 'dorama' ||
     r.media_type === 'tv' ||
     (r.first_air_date && !r.title);
   var type = isTv ? 'series' : 'movie';
@@ -56,6 +53,14 @@ function mapItem(r, forceType) {
   var year = null;
   var d = r.release_date || r.first_air_date || '';
   if (d && d.length >= 4) year = parseInt(d.slice(0, 4), 10);
+  var genres = [];
+  if (Array.isArray(r.genre_ids)) {
+    genres = r.genre_ids.map(String);
+  } else if (Array.isArray(r.genres)) {
+    genres = r.genres.map(function (g) {
+      return g && g.name ? String(g.name) : String(g);
+    });
+  }
   return {
     id: 'tmdb:' + (isTv ? 'series' : 'movie') + ':' + id,
     title: title,
@@ -65,6 +70,12 @@ function mapItem(r, forceType) {
     overview: r.overview || '',
     year: year,
     rating: r.vote_average || null,
+    genres: genres,
+    extra: {
+      tmdbId: String(id),
+      mediaType: isTv ? 'tv' : 'movie',
+      provider: 'tmdb',
+    },
   };
 }
 
@@ -81,7 +92,7 @@ async function getHome(args, config) {
   var topMovies = await tmdbGet('/movie/top_rated', config, { page: 1 });
   rows.push({
     id: 'top-movies',
-    title: 'Mejor valoradas',
+    title: 'Películas mejor valoradas',
     items: (topMovies.results || []).map(function (r) {
       return mapItem(r, 'movie');
     }),
@@ -102,11 +113,40 @@ async function getHome(args, config) {
       return mapItem(r, 'tv');
     }),
   });
+  try {
+    var anime = await tmdbGet('/discover/tv', config, {
+      page: 1,
+      sort_by: 'popularity.desc',
+      with_genres: '16',
+      with_origin_country: 'JP',
+    });
+    rows.push({
+      id: 'anime',
+      title: 'Anime',
+      items: (anime.results || []).map(function (r) {
+        return mapItem(r, 'anime');
+      }),
+    });
+  } catch (e) {}
+  try {
+    var dorama = await tmdbGet('/discover/tv', config, {
+      page: 1,
+      sort_by: 'popularity.desc',
+      with_origin_country: 'KR',
+    });
+    rows.push({
+      id: 'dorama',
+      title: 'Doramas',
+      items: (dorama.results || []).map(function (r) {
+        return mapItem(r, 'dorama');
+      }),
+    });
+  } catch (e) {}
   return { rows: rows };
 }
 
 async function search(args, config) {
-  var q = (args && args.query) || '';
+  var q = (args && (args.q || args.query)) || '';
   if (!q) return { items: [] };
   var data = await tmdbGet('/search/multi', config, { query: q, page: 1 });
   var items = (data.results || [])
@@ -120,24 +160,46 @@ async function search(args, config) {
 }
 
 async function discover(args, config) {
-  var cat = (args && args.category) || 'movie';
+  var cat = String((args && (args.category || args.tipo)) || 'movie').toLowerCase();
   var page = (args && args.page) || 1;
-  var genreId = args && args.genreId;
+  var genreId =
+    (args && (args.genreId != null ? args.genreId : null)) ||
+    (args && args.genre) ||
+    (args && args.genero) ||
+    null;
+
   var path = '/discover/movie';
-  var query = { sort_by: 'popularity.desc', page: page };
   var force = 'movie';
-  if (cat === 'tv' || cat === 'anime' || cat === 'dorama') {
+  var query = { sort_by: 'popularity.desc', page: page };
+
+  if (cat === 'tv' || cat === 'series') {
     path = '/discover/tv';
-    force = 'tv';
-    if (cat === 'anime') query.with_origin_country = 'JP';
-    if (cat === 'dorama') query.with_origin_country = 'KR';
+    force = 'series';
+  } else if (cat === 'anime') {
+    path = '/discover/tv';
+    force = 'anime';
+    query.with_origin_country = 'JP';
+    if (!genreId) query.with_genres = '16';
+  } else if (cat === 'dorama') {
+    path = '/discover/tv';
+    force = 'dorama';
+    query.with_origin_country = 'KR';
+  } else if (cat === 'movie' || cat === 'peliculas' || cat === 'películas') {
+    path = '/discover/movie';
+    force = 'movie';
   }
-  if (genreId) query.with_genres = String(genreId);
+
+  if (genreId != null && String(genreId).length) {
+    query.with_genres = String(genreId);
+  }
+
   var data = await tmdbGet(path, config, query);
   return {
     items: (data.results || []).map(function (r) {
       return mapItem(r, force);
     }),
+    page: page,
+    totalPages: data.total_pages || 1,
   };
 }
 
@@ -147,7 +209,7 @@ async function getMeta(args, config) {
   var media = 'movie';
   var tmdbId = id;
   if (parts[0] === 'tmdb' && parts.length >= 3) {
-    media = parts[1] === 'series' ? 'tv' : 'movie';
+    media = parts[1] === 'series' || parts[1] === 'tv' ? 'tv' : 'movie';
     tmdbId = parts[2];
   }
   var data = await tmdbGet('/' + media + '/' + tmdbId, config, {});

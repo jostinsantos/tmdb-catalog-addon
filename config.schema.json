@@ -6,15 +6,7 @@
       "type": "password",
       "default": "",
       "required": false,
-      "hint": "Clave de themoviedb.org (Settings → API). Si está vacía se usa la del addon."
-    },
-    {
-      "key": "apiKey",
-      "label": "TMDB API Key (alt)",
-      "type": "password",
-      "default": "",
-      "required": false,
-      "hint": "Alias de api_key (compatibilidad)."
+      "hint": "Clave de themoviedb.org. Si está vacía se usa la del addon."
     },
     {
       "key": "language",

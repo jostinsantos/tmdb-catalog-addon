@@ -1,9 +1,9 @@
 {
   "id": "tmdb-catalog",
   "name": "TMDB Catalog",
-  "version": "2.1.0",
-  "description": "Catálogo TMDB. API key y lógica en index.js del repo (la app no guarda claves).",
-  "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgiRhjgL4qcg1_tZRdzHGbIgggX4AYBoC988hAjJZgCQ&s",
+  "version": "2.2.0",
+  "description": "Catálogo TMDB. Configura API key e idioma en Ajustes → Addons → Configurar.",
+  "logo": "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3feb79cffa11.svg",
   "author": "Community",
   "types": ["catalog"],
   "type": "catalog",
@@ -12,9 +12,29 @@
   "exports": ["getHome", "discover", "search", "getMeta"],
   "supportedTypes": ["movie", "tv"],
   "contentLanguage": ["es", "en"],
+  "configSchema": [
+    {
+      "key": "api_key",
+      "label": "TMDB API Key",
+      "type": "password",
+      "default": "",
+      "required": false
+    },
+    {
+      "key": "language",
+      "label": "Idioma",
+      "type": "select",
+      "default": "es-MX",
+      "options": [
+        { "value": "es-MX", "label": "Español (México)" },
+        { "value": "es-ES", "label": "Español (España)" },
+        { "value": "en-US", "label": "English (US)" },
+        { "value": "pt-BR", "label": "Português (Brasil)" }
+      ]
+    }
+  ],
   "extra": {
     "provider": "js",
-    "apiKey": "a2d9bbed370d9f678e34006f8750a5a5",
     "language": "es-MX",
     "supports": {
       "home": true,

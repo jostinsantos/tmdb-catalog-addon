@@ -1,3 +1,35 @@
 {
-  "fields": []
+  "fields": [
+    {
+      "key": "api_key",
+      "label": "TMDB API Key",
+      "type": "password",
+      "default": "",
+      "required": false,
+      "hint": "Clave de themoviedb.org (Settings → API). Si está vacía se usa la del addon."
+    },
+    {
+      "key": "apiKey",
+      "label": "TMDB API Key (alt)",
+      "type": "password",
+      "default": "",
+      "required": false,
+      "hint": "Alias de api_key (compatibilidad)."
+    },
+    {
+      "key": "language",
+      "label": "Idioma",
+      "type": "select",
+      "default": "es-MX",
+      "options": [
+        { "value": "es-MX", "label": "Español (México)" },
+        { "value": "es-ES", "label": "Español (España)" },
+        { "value": "en-US", "label": "English (US)" },
+        { "value": "pt-BR", "label": "Português (Brasil)" },
+        { "value": "fr-FR", "label": "Français" },
+        { "value": "it-IT", "label": "Italiano" },
+        { "value": "de-DE", "label": "Deutsch" }
+      ]
+    }
+  ]
 }

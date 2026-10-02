@@ -10,14 +10,18 @@ var BASE = 'https://api.themoviedb.org/3';
 var IMG = 'https://image.tmdb.org/t/p';
 
 function cfgKey(config) {
+  // Prioridad: config de la app (Ajustes → Addons) > default del addon
   if (config) {
-    if (config.apiKey) return String(config.apiKey);
-    if (config.api_key) return String(config.api_key);
+    if (config.api_key && String(config.api_key).trim()) return String(config.api_key).trim();
+    if (config.apiKey && String(config.apiKey).trim()) return String(config.apiKey).trim();
   }
   return DEFAULT_API_KEY;
 }
 function cfgLang(config) {
-  if (config && config.language) return String(config.language);
+  if (config) {
+    if (config.language && String(config.language).trim()) return String(config.language).trim();
+    if (config.lang && String(config.lang).trim()) return String(config.lang).trim();
+  }
   return DEFAULT_LANGUAGE;
 }
 
